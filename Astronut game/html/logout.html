@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Astronaut Adventure</title>
+    <link rel="preload" href="../css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="../css/styles.css"></noscript>
+    
+</head>
+<body id="gameBody">
+    <script src="../js/users.js" defer></script> 
+    
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <ul id="scoreboard"></ul>
+    <button id="logoutButton" style="display: none;">Logout</button> 
+    
+    <script>
+        // Check login status on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+            const logoutButton = document.getElementById('logoutButton');
+            
+            if (isLoggedIn) {
+                logoutButton.style.display = 'block'; 
+            } else {
+                window.location.href = './register.html'; 
+            }
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            logout();
+        });
+    </script>
+</body>
+</html>

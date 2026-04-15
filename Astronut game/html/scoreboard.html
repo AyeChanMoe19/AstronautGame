@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoreboard</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        /* Your existing styles remain unchanged */
+        .topsidenav {
+            background-color: #1b1c1c;
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 20px;
+        }
+
+        .topsidenav a {
+            color: #efebeb; 
+            padding: 14px 20px; 
+            text-decoration: none;
+            font-size: 16px;      
+            border-radius: 5px;   
+            margin-left: 10px;    
+        }
+
+        .topsidenav a:hover {
+            background-color: #4e489e;
+            color: rgb(241, 239, 239);
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            margin: 5vh auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        /* Scoreboard Heading */
+        .container h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        /* Best User Score Styling */
+        #bestUserScore, #currentUserScore {
+            font-size: 18px;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        /* Scoreboard Styling */
+        #topScores {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        #topScores li {
+            font-size: 18px; 
+            margin: 2px 0; 
+            padding: 5px 10px; 
+            display: flex; 
+            justify-content: center; 
+            text-align: center;
+            background-color: #f5f5f5; 
+            border-radius: 5px; 
+            transition: background-color 0.3s; 
+        }
+
+        #topScores li strong {
+            color: #121212; 
+        }
+
+        #topScores li:hover {
+            background-color: #f8e3eb; 
+        }
+
+        h3 {
+            color: #e91717; 
+            font-size: 40px;
+            margin-bottom: 15px; 
+        }
+
+        #backButton {
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: rgb(27, 27, 27);
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        #backButton:hover {
+            background-color: #aaf3ce;
+        }
+
+        /* Warning Message Styling */
+        #warningMessage {
+            color: red;
+            display: none; /* Initially hidden */
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="topsidenav" id="navbar">
+        <a href="./register.html" id="registerLink">REGISTER</a>
+        <a href="./login.html" id="loginLink">LOGIN</a>
+        <a href="./game.html">START</a>
+        <a href="./scoreboard.html">SCOREBOARD</a>
+        <a href="./gamemanual.html">GAME MANUAL</a>
+        <a href="#" id="logoutLink" style="display: none;" onclick="logout();">LOGOUT</a>
+    </div>
+
+    <div class="container">
+        <h2>Scoreboard</h2>
+        <div id="bestUserScore">Your Best Score: <span id="userBestScore">0</span></div>
+        <div id="currentUserScore">Your Latest Score: <span id="currentScore">0</span></div>
+
+        <h3>Leaderboard Scores</h3>
+        <ul id="topScores"></ul>
+
+        <div id="warningMessage">You are not logged in! Redirecting to login...</div>
+        
+        <button id="backButton">Back to Home</button>
+    </div>
+
+    <script>
+        // Function to display the current user's best score and latest score
+    function displayUserBestScore() {
+        const currentUser = localStorage.getItem("currentUser");
+        const bestUserScoreElement = document.getElementById("bestUserScore");
+        const currentUserScoreElement = document.getElementById("currentUserScore");
+
+        if (currentUser) {
+            // Retrieve the user's data object
+            const userData = JSON.parse(localStorage.getItem(currentUser));
+            if (userData) {
+                document.getElementById("userBestScore").innerText = userData.topScore || 0;
+                document.getElementById("currentScore").innerText = userData.latestScore || 0;
+            }
+
+            bestUserScoreElement.style.display = "block";
+            currentUserScoreElement.style.display = "block";
+        } else {
+            console.warn("No current user logged in.");
+            bestUserScoreElement.style.display = "none";
+            currentUserScoreElement.style.display = "none";
+            document.getElementById("warningMessage").style.display = "block"; // Show warning
+        }
+    }
+
+    // Function to display the leaderboard
+    function displayTopScores() {
+        const topScoresList = document.getElementById("topScores");
+        const usersData = [];
+
+        // Loop through localStorage to find users and their scores
+        Object.keys(localStorage).forEach(key => {
+            if (key !== "currentUser" && key !== "loggedIn") { // Skip special keys
+                const userData = JSON.parse(localStorage.getItem(key));
+
+                // Check if userData has topScore property
+                if (userData && userData.topScore !== undefined) {
+                    usersData.push({
+                        username: key,
+                        topScore: userData.topScore,
+                        latestTime: userData.latestTime || Infinity
+                    });
+                }
+            }
+        });
+
+        // Sort users by topScore (descending), then by latestTime (ascending for ties)
+        const sortedUsers = usersData
+            .sort((a, b) => b.topScore - a.topScore || a.latestTime - b.latestTime)
+            .slice(0, 10); // Limit to top 10 users
+
+        // Clear the current leaderboard
+        topScoresList.innerHTML = '';
+
+        // Render each user in the leaderboard list
+        if (sortedUsers.length === 0) {
+            console.warn("No users found in localStorage for leaderboard.");
+            topScoresList.textContent = "No users found in localStorage.";
+        } else {
+            sortedUsers.forEach(userData => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `<strong>${userData.username}</strong>: ${userData.topScore} (Time: ${userData.latestTime.toFixed(2)}s)`;
+                topScoresList.appendChild(listItem);
+            });
+        }
+    }
+    
+        // Show or hide navigation links based on login status
+        function updateNavBar() {
+            const loggedIn = localStorage.getItem("loggedIn") === "true";
+            document.getElementById("registerLink").style.display = loggedIn ? "none" : "block";
+            document.getElementById("loginLink").style.display = loggedIn ? "none" : "block";
+            document.getElementById("logoutLink").style.display = loggedIn ? "block" : "none";
+        }
+    
+        // Logout function to clear login data
+        function logout() {
+            localStorage.removeItem("currentUser");
+            localStorage.setItem("loggedIn", "false");
+            updateNavBar();
+            window.location.href = "./login.html";
+        }
+    
+        // Event listener for the back button
+        document.getElementById("backButton").addEventListener("click", function () {
+            window.location.href = '../index.html';
+        });
+    
+        // Initial function calls
+        displayUserBestScore();
+        displayTopScores();
+        updateNavBar();
+    </script>
+
+</body>
+</html>

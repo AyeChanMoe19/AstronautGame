@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Astronaut Adventure - Home</title>
+    <link rel="stylesheet" href="./css/styles.css" /> 
+    <script src="./js/users.js" defer></script> 
+    <style>
+
+body {
+            background-image: url('./images/spacebg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #fff;
+            font-family: 'Arial', sans-serif; 
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Navigation Bar Styles */
+        .topsidenav {
+            background-color:  #1b1c1c; 
+            display: flex;
+            justify-content: flex-end; 
+            padding: 10px 20px; 
+            position: absolute; 
+            top: 0; 
+            right: 0; 
+            width: 100%; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+            border-radius: 0 0 10px 10px; 
+        }
+
+        /* Navigation Links */
+        .topsidenav a {
+            color: #efebeb; 
+            padding: 14px 20px; 
+            text-decoration: none;
+            font-size: 16px; 
+            border-radius: 5px;
+            margin-left: 10px; 
+            transition: background-color 0.3s ease; 
+        }
+
+        /* Change the color of links on hover */
+        .topsidenav a:hover {
+            background-color: #4e489e; 
+            color: rgb(241, 239, 239); 
+        }
+
+        /* Title styling */
+        h1 {
+            color: #ffeb3b; 
+            font-size: 4rem;
+            text-align: center;
+            margin: 20px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); 
+        }
+
+        /* Paragraph styling */
+        p {
+            font-size: 2.0rem;
+            color: #ffe57f; 
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.5;
+            margin: 0 20px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5); 
+        }
+
+        /* Start Game Button Styles */
+        #startGameButton {
+            width: 250px; 
+            padding: 35px 0; 
+            font-size: 42px; 
+            font-weight: bold;
+            color: #ffffff;
+            text-align: center;
+            background: linear-gradient(135deg, #4e489e, #6a5acd);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hover effects */
+        #startGameButton:hover {
+            background: linear-gradient(135deg, #5a54c1, #7b6be6);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* Circular hover effect inside the button */
+        #startGameButton::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.4s ease;
+            z-index: 0;
+        }
+
+        #startGameButton:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Button text styling */
+        #startGameButton span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            #startGameButton {
+                padding: 12px 25px; 
+                font-size: 18px; 
+            }
+
+            .topsidenav a {
+                font-size: 14px; 
+            }
+
+            h1 {
+                font-size: 2rem; 
+            }
+
+            p {
+                font-size: 1rem; 
+            }
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="topsidenav" id="navbar">
+        <a href="./html/register.html" id="registerLink">REGISTER</a>
+        <a href="./html/login.html" id="loginLink">LOGIN</a>
+        <a href="./html/game.html">START</a>
+        <a href="./html/scoreboard.html" id="scoreboardLink">SCOREBOARD</a>
+        <a href="./html/gamemanual.html">GAME MANUAL</a>
+        <a href="#" id="logoutLink" style="display: none;" onclick="logout()">LOGOUT</a>
+    </div>
+
+    <h1>Welcome to Astronaut Adventure!</h1>
+    <p>Jump and dodge rocks as you soar through space! Test your skills and try to beat your high score!</p>
+    <br><br>
+
+    <button id="startGameButton"><span>Start Game</span></button>
+
+    <script>
+        document.getElementById('startGameButton').addEventListener('click', function () {
+            window.location.href = './html/game.html'; 
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME Register</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    
+</head>
+<body>
+    <script src="../js/users.js" defer></script>
+    
+    <div class="topsidenav" id="navbar">
+        <a href="./register.html" id="registerLink">REGISTER</a>
+        <a href="./login.html" id="loginLink">LOGIN</a>
+        <a href="./game.html">START</a>
+        <a href="./scoreboard.html">SCOREBOARD</a>
+        <a href="./gamemanual.html">GAME MANUAL</a>
+        <a href="#" id="logoutLink" style="display: none;" onclick="logout();">LOGOUT</a>
+    </div>
+
+    <div class="reg-container">
+        <h2>Register</h2>
+        <form onsubmit="register(); return false;">
+            <input type="username" placeholder="UserName" required id="UsernameInput" />
+            <input type="email" placeholder="Email" required id="EmailInput" />
+            <input type="phonenumber" placeholder="PhoneNumber" required id="PhoneNumberInput" />
+            <textarea placeholder="Address" required id="AddressInput" rows="4"></textarea>
+            <input type="password" placeholder="Password" required id="PasswordInput" />
+            <input type="password" placeholder="Confirm Password" required id="ConfirmPasswordInput" />
+            <button type="submit">Register</button>
+        </form>
+        <div class="link">
+            <a href="./login.html">Already have an account? Login</a>
+        </div>
+    </div>
+
+    <script>
+        // Check if the user is logged in
+        const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+
+        const navbar = document.getElementById('navbar');
+        const registerLink = document.getElementById('registerLink');
+        const loginLink = document.getElementById('loginLink');
+        const scoreboardLink = document.getElementById('scoreboardLink');
+        const logoutLink = document.getElementById('logoutLink');
+
+        if (isLoggedIn) {
+            registerLink.style.display = 'none';
+            loginLink.style.display = 'none';
+            scoreboardLink.style.display = 'block';
+            logoutLink.style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

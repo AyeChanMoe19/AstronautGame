@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Astronaut Adventure</title>
+    <style>
+        body {
+            background-image: url('../images/spacebg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Navigation Styles */
+        .topsidenav {
+            background-color: #1b1c1c; 
+            display: flex;              
+            justify-content: flex-end;  
+            padding: 10px 20px;
+            position: absolute; 
+            top: 0;            
+            right: 0;         
+            z-index: 1000;      
+            border-radius: 0 0 10px 10px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+        }
+
+        .topsidenav a {
+            color: #efebeb;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        .topsidenav a:hover {
+            background-color: #4e489e;
+            color: rgb(241, 239, 239);
+        }
+
+        .warning {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffcccb;
+            color: #b30000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        canvas {
+            border: 2px solid #fff;
+            background-color: #000033;
+            display: block;
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Game Over Message Styles */
+        #scoreboard {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1001;
+            color: white;
+            text-align: center;
+        }
+
+        #scoreboard {
+            display: none; 
+            background: rgba(0, 0, 0, 0.7); 
+            padding: 20px; 
+            border-radius: 10px; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            text-align: center; 
+            color: white; 
+            z-index: 10; 
+        }
+
+        #scoreboard h2 {
+            font-size: 48px; 
+            margin-bottom: 20px; 
+        }
+
+        #scoreboard button {
+            margin-top: 10px; 
+            padding: 10px 15px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px; 
+        }
+
+        /* Button hover effect */
+        #scoreboard button:hover {
+            background-color: #0056b3; 
+        }
+
+        #scoreboard ul {
+            list-style-type: none; 
+            padding: 0; 
+            margin: 0 0 20px 0; 
+        }
+
+        #scoreboard li {
+            font-size: 20px; 
+        }
+        
+        #restartButton {
+            background-color: #4e489e;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #homeButton {
+            background-color: #4e489e;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="topsidenav" id="navbar">
+        <a href="./register.html" id="registerLink">REGISTER</a>
+        <a href="./login.html" id="loginLink">LOGIN</a>
+        <a href="./game.html" id="startGameLink">START</a>
+        <a href="./scoreboard.html" id="scoreboardLink">SCOREBOARD</a>
+        <a href="./gamemanual.html" id="gamemanualLink">GAME MANUAL</a>
+        <a href="#" id="logoutLink" style="display: none;" onclick="logout()">LOGOUT</a>
+    </div>
+
+    <!-- Warning Message -->
+    <div id="warningMessage" class="warning" style="display: none;">
+        ⚠️ Please log in first to play the game.
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="scoreboard"> <!-- Initially hidden -->
+        <h2>Game Over!</h2> <!-- Larger Game Over message -->
+        <p>Your <span id="finalScore">0</span></p> <!-- Display final score -->
+        <h2>Leaderboard</h2>
+        <ul id="leaderboardList"></ul> <!-- List to display scores -->
+        
+        <button id="restartButton">Restart Game</button>
+        <button id="homeButton">Back to Home</button>
+    </div>
+
+    <script src="../js/game.js" defer></script>
+    <script>
+        let gameOver = false; // To track game-over state
+    
+        // Show or hide navigation links based on login status
+        function updateNavBar() {
+            const currentUser = localStorage.getItem("currentUser");
+            document.getElementById("registerLink").style.display = currentUser ? "none" : "block";
+            document.getElementById("loginLink").style.display = currentUser ? "none" : "block";
+            document.getElementById("logoutLink").style.display = currentUser ? "block" : "none";
+            document.getElementById("startGameLink").style.display = currentUser ? "block" : "none";
+            document.getElementById("scoreboardLink").style.display = currentUser ? "block" : "none";
+        }
+    
+        // Logout function to clear login data and update navbar
+        function logout() {
+            localStorage.removeItem("currentUser");
+            localStorage.setItem("loggedIn", "false"); // Update login state
+            updateNavBar();  // Re-initialize the navbar after logging out
+            window.location.href = "./login.html"; 
+        }
+    
+        // Function to handle game over and showing the scoreboard
+        function endGame(finalScore) {
+            gameOver = true;
+            document.getElementById("finalScore").innerText = "Final Score: " + finalScore;
+            document.getElementById("scoreboard").style.display = "block";
+            updateNavBar();  // Update navbar to reflect game over status
+        }
+    
+        // Restart function to reset the game and update the navbar if needed
+        function restartGame() {
+            gameOver = false;
+            document.getElementById("scoreboard").style.display = "none";
+            initializeGame(); // Assuming this is your game's initialization function
+            gameLoop();
+            updateNavBar(); // Re-initialize navbar after restarting
+        }
+    
+        // Initialize Navbar Display on Page Load
+        document.addEventListener("DOMContentLoaded", () => {
+            updateNavBar(); // Initial navbar setup
+    
+            // Check if logged-in user exists
+            const currentUser = localStorage.getItem("currentUser");
+            if (!currentUser) {
+                document.getElementById("warningMessage").style.display = "block";
+                setTimeout(() => {
+                    window.location.href = './login.html';
+                }, 2000);
+            } else {
+                // Start the game only if logged in
+                initializeGame(); 
+                gameLoop();
+            }
+        });
+    
+        document.getElementById("restartButton").addEventListener("click", function () {
+            if (gameOver) { // Only allow restart if the game is over
+                restartGame();
+            }
+        });
+    </script>
+</body>
+</html>

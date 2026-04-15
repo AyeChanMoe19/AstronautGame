@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME Login</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    
+</head>
+<body>
+    <script src="../js/users.js" defer></script>
+    
+    <div class="topsidenav" id="navbar">
+        <a href="./register.html" id="registerLink">REGISTER</a>
+        <a href="./login.html" id="loginLink">LOGIN</a>
+        <a href="./game.html">START</a>
+        <a href="./scoreboard.html">SCOREBOARD</a>
+        <a href="./gamemanual.html">GAME MANUAL</a>
+        <a href="#" id="logoutLink" style="display: none;" onclick="logout()">LOGOUT</a>
+    </div>
+    
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm"> 
+            <input type="text" id="UsernameInput" placeholder="Enter your User Name" required />
+            <input type="password" id="PasswordInput" placeholder="Password" required />
+            <button type="submit">Login</button>
+        </form>
+        
+        <div class="link">
+            <a href="./register.html">Don't have an account? Register</a>
+        </div>
+    </div>
+
+    <script>
+        // Function to handle user login
+        function login(event) {
+            event.preventDefault(); 
+            
+            const username = document.getElementById("UsernameInput").value;
+            const password = document.getElementById("PasswordInput").value;
+
+            // Retrieve stored user data
+            const user = JSON.parse(localStorage.getItem(username));
+
+            // Check if user exists and password matches
+            if (user && user.password === password) {   
+                localStorage.setItem("currentUser", username); 
+                localStorage.setItem("loggedIn", "true");
+
+                window.location.href = "../index.html";
+            } else {
+                alert("Invalid username or password. Please try again.");
+            }
+        }
+
+        // Function to update navigation links based on login status
+        function updateNavLinks() {
+            const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+            document.getElementById("registerLink").style.display = isLoggedIn ? "none" : "block";
+            document.getElementById("loginLink").style.display = isLoggedIn ? "none" : "block";
+            document.getElementById("startGameLink").style.display = currentUser ? "block" : "none";
+            document.getElementById("scoreboardLink").style.display = currentUser ? "block" : "none";
+            document.getElementById("logoutLink").style.display = isLoggedIn ? "block" : "none";
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem("currentUser");
+            localStorage.setItem("loggedIn", "false");
+            updateNavLinks();
+            window.location.href = "../index.html";
+        }
+
+        // Event listener for form submission
+        document.getElementById("loginForm").addEventListener("submit", login);
+
+        // Update navigation links on page load
+        document.addEventListener("DOMContentLoaded", updateNavLinks);
+    </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Manual</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+    /* Container for Information Frame */
+    .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 90%;
+                max-width: 600px;
+                margin: 5vh auto;
+                padding: 20px;
+                background-color: rgba(0, 0, 0, 0.8);
+                border-radius: 15px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                text-align: center;
+        }
+        h2 {
+            color: #e91717;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #f5d02c;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #ffffff;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .control {
+            background-color: #4CAF50;
+            border-radius: 8px;
+            padding: 10px 20px;
+            margin: 5px;
+            color: #0f0f0f;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .control:hover {
+            background-color: #aaf3ce;
+        }
+
+        #backButton {
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: rgb(27, 27, 27);
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        #backButton:hover {
+            background-color: #aaf3ce;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="topsidenav" id="navbar">
+        <a href="./register.html" id="registerLink">REGISTER</a>
+        <a href="./login.html" id="loginLink">LOGIN</a>
+        <a href="./game.html">START</a>
+        <a href="./scoreboard.html">SCOREBOARD</a>
+        <a href="./gamemanual.html">GAME MANUAL</a>
+        <a href="#" id="logoutLink" style="display: none;" onclick="logout()">LOGOUT</a>
+    </div>
+
+    <div class="container">
+        <h2>Game Manual</h2>
+        <p>Welcome to the Astronaut Adventure! Here's how to navigate your journey:</p>
+
+        <h3>Controls</h3>
+        <div class="controls">
+            <div class="control">Space: Jump</div>
+            <div class="control">D: Double Jump</div>
+            <div class="control">C: Crawl</div>
+            <div class="control">F: Flight</div>
+        </div>
+
+        <p>Collect <strong>80 stars</strong> to unlock the ability to fly. This feature will be available for only <strong>3 seconds</strong>!</p>
+        <p>Level up by scoring <strong>50 points</strong> each time, up to a maximum of <strong>250 points</strong>.</p>
+
+        <button id="backButton">Back to Home</button>
+    </div>
+
+    <script>
+        // Function to update navigation based on login status
+        function updateNavBar() {
+            const loggedIn = localStorage.getItem("loggedIn") === "true";
+            document.getElementById("registerLink").style.display = loggedIn ? "none" : "block";
+            document.getElementById("loginLink").style.display = loggedIn ? "none" : "block";
+            document.getElementById("logoutLink").style.display = loggedIn ? "block" : "none";
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem("currentUser");
+            localStorage.setItem("loggedIn", "false");
+            updateNavBar();
+            window.location.href = "./login.html";
+        }
+
+        // Initialize Navbar Display on Page Load
+        document.addEventListener("DOMContentLoaded", updateNavBar);
+        
+        // Event listener for back button
+        document.getElementById("backButton").addEventListener("click", function () {
+            window.location.href = '../index.html';
+        });
+    </script>
+</body>
+</html>
